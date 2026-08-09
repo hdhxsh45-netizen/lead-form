@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>线索管理后台</title>
+  <title>Lead Management</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -213,10 +213,10 @@
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <div class="icon">🔒</div>
-      <h2>管理后台登录</h2>
-      <input type="password" id="passwordInput" placeholder="请输入密码" onkeydown="if(event.key==='Enter') doLogin()">
-      <button onclick="doLogin()">登录</button>
-      <div class="login-error" id="loginError">密码错误，请重试</div>
+      <h2>Admin Login</h2>
+      <input type="password" id="passwordInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') doLogin()">
+      <button onclick="doLogin()">Login</button>
+      <div class="login-error" id="loginError">Incorrect password, please try again</div>
     </div>
   </div>
 
@@ -224,13 +224,13 @@
   <div class="container" id="adminPanel" style="display:none;">
     <div class="header">
       <div>
-        <h1>📊 线索管理后台</h1>
-        <div class="stats" id="stats">加载中...</div>
+        <h1>📊 Lead Management</h1>
+        <div class="stats" id="stats">Loading...</div>
       </div>
       <div class="actions">
-        <button class="btn btn-primary" onclick="loadLeads()">🔄 刷新</button>
-        <button class="btn btn-outline" onclick="exportCSV()">📥 导出 CSV</button>
-        <button class="btn btn-logout" onclick="doLogout()">退出</button>
+        <button class="btn btn-primary" onclick="loadLeads()">🔄 Refresh</button>
+        <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
+        <button class="btn btn-logout" onclick="doLogout()">Logout</button>
       </div>
     </div>
 
@@ -303,10 +303,10 @@
         }
 
         const leads = await res.json();
-        stats.textContent = `共 ${leads.length} 条线索`;
+        stats.textContent = `${leads.length} leads total`;
 
         if (leads.length === 0) {
-          list.innerHTML = '<div class="empty"><div class="icon">📭</div><p>暂无线索</p></div>';
+          list.innerHTML = '<div class="empty"><div class="icon">📭</div><p>No leads yet</p></div>';
           return;
         }
 
@@ -321,28 +321,28 @@
             </div>
             <div class="lead-body">
               <div class="field">
-                <div class="label">联系方式</div>
+                <div class="label">Contact</div>
                 <div class="value contact">${lead.contact}</div>
               </div>
               <div class="field">
-                <div class="label">方式</div>
+                <div class="label">Method</div>
                 <div class="value">${lead.contactType === 'whatsapp' ? '💬 WhatsApp' : '✈️ Telegram'}</div>
               </div>
               <div class="field">
-                <div class="label">是否了解多肽</div>
+                <div class="label">Familiar with peptides</div>
                 <div class="value">${lead.peptideKnowledge || '-'}</div>
               </div>
               <div class="field">
-                <div class="label">是否使用过多肽</div>
+                <div class="label">Used peptides before</div>
                 <div class="value">${lead.peptideUsage || '-'}</div>
               </div>
               <div class="field full-width">
-                <div class="label">职业/行业</div>
+                <div class="label">Occupation / Industry</div>
                 <div class="value">${lead.job || '-'}</div>
               </div>
               ${lead.notes ? `
               <div class="field full-width">
-                <div class="label">备注</div>
+                <div class="label">Notes</div>
                 <div class="value">${lead.notes}</div>
               </div>` : ''}
             </div>
@@ -350,12 +350,12 @@
         `).join('');
 
       } catch (err) {
-        list.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>加载失败，请刷新重试</p></div>';
+        list.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Failed to load, please refresh</p></div>';
       }
     }
 
     async function deleteLead(id) {
-      if (!confirm('确定删除这条线索？')) return;
+      if (!confirm('Are you sure you want to delete this lead?')) return;
 
       try {
         const res = await fetch(`/api/leads/${id}`, {
@@ -364,11 +364,11 @@
         });
         const data = await res.json();
         if (data.success) {
-          showToast('已删除');
+          showToast('Deleted');
           loadLeads();
         }
       } catch (err) {
-        showToast('删除失败');
+        showToast('Delete failed');
       }
     }
 
