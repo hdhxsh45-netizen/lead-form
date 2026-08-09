@@ -1,390 +1,193 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lead Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Customer Registration</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: #f0f2f5;
-      padding: 20px;
-      color: #333;
-    }
-
-    /* 登录页 */
-    .login-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: #f5f7fa;
       min-height: 100vh;
+      padding: 20px 16px 40px;
     }
-
-    .login-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 40px 32px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-      text-align: center;
-      width: 100%;
-      max-width: 360px;
+    .container { max-width: 480px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 22px; color: #1a1a1a; font-weight: 600; }
+    .header p { font-size: 14px; color: #888; margin-top: 6px; }
+    .form-card { background: #fff; border-radius: 12px; padding: 24px 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .form-group { margin-bottom: 22px; }
+    .form-group label { display: block; font-size: 15px; color: #333; font-weight: 500; margin-bottom: 8px; }
+    .form-group label .required { color: #e74c3c; margin-left: 2px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px 14px; border: 1.5px solid #e0e0e0; border-radius: 8px;
+      font-size: 15px; color: #333; background: #fafafa; transition: border-color 0.2s, background 0.2s; -webkit-appearance: none;
     }
-
-    .login-card .icon {
-      font-size: 48px;
-      margin-bottom: 16px;
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #4a90d9; background: #fff; }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .radio-option { flex: 1; min-width: 100px; }
+    .radio-option input[type="radio"] { display: none; }
+    .radio-option label {
+      display: flex; align-items: center; justify-content: center; padding: 10px 16px;
+      border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 14px; color: #666;
+      background: #fafafa; cursor: pointer; transition: all 0.2s; margin-bottom: 0; font-weight: 400;
     }
-
-    .login-card h2 {
-      font-size: 20px;
-      margin-bottom: 20px;
-      color: #333;
+    .radio-option input[type="radio"]:checked + label { border-color: #4a90d9; background: #e8f0fe; color: #4a90d9; font-weight: 500; }
+    .contact-type-toggle { display: flex; gap: 0; margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1.5px solid #e0e0e0; }
+    .contact-type-toggle input[type="radio"] { display: none; }
+    .contact-type-toggle label {
+      flex: 1; text-align: center; padding: 10px; font-size: 14px; color: #666;
+      background: #fafafa; cursor: pointer; transition: all 0.2s; margin-bottom: 0; font-weight: 400; border: none;
     }
-
-    .login-card input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 15px;
-      margin-bottom: 12px;
-      outline: none;
-      transition: border-color 0.2s;
+    .contact-type-toggle input[type="radio"]:checked + label { background: #4a90d9; color: #fff; font-weight: 500; }
+    .submit-btn {
+      width: 100%; padding: 14px; background: linear-gradient(135deg, #4a90d9, #357abd);
+      color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: opacity 0.2s; margin-top: 8px;
     }
-
-    .login-card input:focus {
-      border-color: #4a90d9;
-    }
-
-    .login-card button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #4a90d9, #357abd);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .login-card button:active { opacity: 0.85; }
-
-    .login-error {
-      color: #e74c3c;
-      font-size: 13px;
-      margin-top: 8px;
-      display: none;
-    }
-
-    /* 管理页 */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .header h1 {
-      font-size: 22px;
-      color: #1a1a1a;
-    }
-
-    .header .stats {
-      font-size: 14px;
-      color: #888;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 8px 18px;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .btn:active { opacity: 0.8; }
-
-    .btn-primary { background: #4a90d9; color: #fff; }
-    .btn-danger { background: #e74c3c; color: #fff; }
-    .btn-outline { background: #fff; color: #4a90d9; border: 1.5px solid #4a90d9; }
-    .btn-logout { background: #f5f5f5; color: #999; }
-
-    .lead-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .lead-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 18px 20px;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-      position: relative;
-    }
-
-    .lead-card .lead-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .lead-card .lead-time { font-size: 13px; color: #999; }
-    .lead-card .lead-id { font-size: 11px; color: #ccc; font-family: monospace; }
-
-    .lead-card .lead-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .lead-card .field { font-size: 14px; }
-    .lead-card .field .label { color: #999; font-size: 12px; margin-bottom: 2px; }
-    .lead-card .field .value { color: #333; font-weight: 500; }
-    .lead-card .field .value.contact { color: #4a90d9; }
-    .lead-card .field.full-width { grid-column: 1 / -1; }
-
-    .lead-card .delete-btn {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 28px;
-      height: 28px;
-      border: none;
-      background: #f5f5f5;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 14px;
-      color: #999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-
-    .lead-card .delete-btn:hover { background: #fee; color: #e74c3c; }
-
-    .empty { text-align: center; padding: 60px 20px; color: #ccc; }
-    .empty .icon { font-size: 48px; margin-bottom: 12px; }
-    .loading { text-align: center; padding: 40px; color: #999; }
-
+    .submit-btn:active { opacity: 0.85; }
+    .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+    .success-msg { display: none; text-align: center; padding: 40px 20px; }
+    .success-msg .icon { font-size: 56px; margin-bottom: 16px; }
+    .success-msg h2 { font-size: 20px; color: #333; margin-bottom: 8px; }
+    .success-msg p { font-size: 14px; color: #888; }
     .toast {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.75);
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      z-index: 999;
-      display: none;
-    }
-
-    @media (max-width: 600px) {
-      .lead-card .lead-body { grid-template-columns: 1fr; }
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.75); color: #fff; padding: 12px 24px;
+      border-radius: 8px; font-size: 14px; z-index: 999; display: none; max-width: 90%; text-align: center;
     }
   </style>
 </head>
 <body>
-
-  <!-- 登录页 -->
-  <div class="login-screen" id="loginScreen">
-    <div class="login-card">
-      <div class="icon">🔒</div>
-      <h2>Admin Login</h2>
-      <input type="password" id="passwordInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') doLogin()">
-      <button onclick="doLogin()">Login</button>
-      <div class="login-error" id="loginError">Incorrect password, please try again</div>
-    </div>
-  </div>
-
-  <!-- 管理页 -->
-  <div class="container" id="adminPanel" style="display:none;">
+  <div class="container">
     <div class="header">
-      <div>
-        <h1>📊 Lead Management</h1>
-        <div class="stats" id="stats">Loading...</div>
-      </div>
-      <div class="actions">
-        <button class="btn btn-primary" onclick="loadLeads()">🔄 Refresh</button>
-        <button class="btn btn-outline" onclick="exportCSV()">📥 Export CSV</button>
-        <button class="btn btn-logout" onclick="doLogout()">Logout</button>
-      </div>
+      <h1>📋 Customer Registration</h1>
+      <p>Please fill in the information below and we will contact you soon</p>
     </div>
-
-    <div class="lead-list" id="leadList">
-      <div class="loading">加载中...</div>
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    let adminToken = localStorage.getItem('adminToken') || '';
-
-    // 页面加载时检查登录状态
-    if (adminToken) {
-      showAdmin();
-      loadLeads();
-    }
-
-    async function doLogin() {
-      const password = document.getElementById('passwordInput').value;
-      if (!password) return;
-
-      try {
-        const res = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password })
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          adminToken = data.token;
-          localStorage.setItem('adminToken', adminToken);
-          showAdmin();
-          loadLeads();
-        } else {
-          document.getElementById('loginError').style.display = 'block';
-          document.getElementById('passwordInput').value = '';
-        }
-      } catch (err) {
-        document.getElementById('loginError').style.display = 'block';
-      }
-    }
-
-    function doLogout() {
-      adminToken = '';
-      localStorage.removeItem('adminToken');
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('adminPanel').style.display = 'none';
-    }
-
-    function showAdmin() {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminPanel').style.display = 'block';
-    }
-
-    async function loadLeads() {
-      const list = document.getElementById('leadList');
-      const stats = document.getElementById('stats');
-
-      try {
-        const res = await fetch('/api/leads', {
-          headers: { 'X-Admin-Token': adminToken }
-        });
-
-        if (res.status === 403) {
-          doLogout();
-          return;
-        }
-
-        const leads = await res.json();
-        stats.textContent = `${leads.length} leads total`;
-
-        if (leads.length === 0) {
-          list.innerHTML = '<div class="empty"><div class="icon">📭</div><p>No leads yet</p></div>';
-          return;
-        }
-
-        list.innerHTML = leads.map(lead => `
-          <div class="lead-card">
-            <button class="delete-btn" onclick="deleteLead('${lead.id}')" title="删除">✕</button>
-            <div class="lead-header">
-              <div>
-                <span class="lead-time">📅 ${lead.submittedAtLocal}</span>
-              </div>
-              <span class="lead-id">${lead.id.slice(0, 8)}</span>
+    <div class="form-card" id="formCard">
+      <form id="leadForm">
+        <div class="form-group">
+          <label>Contact Method <span class="required">*</span></label>
+          <div class="contact-type-toggle">
+            <input type="radio" name="contactType" id="whatsapp" value="whatsapp" checked>
+            <label for="whatsapp">💬 WhatsApp</label>
+            <input type="radio" name="contactType" id="telegram" value="telegram">
+            <label for="telegram">️ Telegram</label>
+          </div>
+          <input type="text" id="contact" placeholder="Enter your username / phone number / link" required>
+        </div>
+        <div class="form-group">
+          <label>Are you familiar with peptide products? <span class="required">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="peptideKnowledge" id="know_yes" value="Yes, very familiar">
+              <label for="know_yes">Yes</label>
             </div>
-            <div class="lead-body">
-              <div class="field">
-                <div class="label">Contact</div>
-                <div class="value contact">${lead.contact}</div>
-              </div>
-              <div class="field">
-                <div class="label">Method</div>
-                <div class="value">${lead.contactType === 'whatsapp' ? '💬 WhatsApp' : '✈️ Telegram'}</div>
-              </div>
-              <div class="field">
-                <div class="label">Familiar with peptides</div>
-                <div class="value">${lead.peptideKnowledge || '-'}</div>
-              </div>
-              <div class="field">
-                <div class="label">Used peptides before</div>
-                <div class="value">${lead.peptideUsage || '-'}</div>
-              </div>
-              <div class="field full-width">
-                <div class="label">Occupation / Industry</div>
-                <div class="value">${lead.job || '-'}</div>
-              </div>
-              ${lead.notes ? `
-              <div class="field full-width">
-                <div class="label">Notes</div>
-                <div class="value">${lead.notes}</div>
-              </div>` : ''}
+            <div class="radio-option">
+              <input type="radio" name="peptideKnowledge" id="know_some" value="Somewhat familiar">
+              <label for="know_some">Somewhat</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="peptideKnowledge" id="know_no" value="Not familiar">
+              <label for="know_no">No</label>
             </div>
           </div>
-        `).join('');
-
-      } catch (err) {
-        list.innerHTML = '<div class="empty"><div class="icon">⚠️</div><p>Failed to load, please refresh</p></div>';
-      }
-    }
-
-    async function deleteLead(id) {
-      if (!confirm('Are you sure you want to delete this lead?')) return;
-
-      try {
-        const res = await fetch(`/api/leads/${id}`, {
-          method: 'DELETE',
-          headers: { 'X-Admin-Token': adminToken }
-        });
-        const data = await res.json();
-        if (data.success) {
-          showToast('Deleted');
-          loadLeads();
-        }
-      } catch (err) {
-        showToast('Delete failed');
-      }
-    }
-
-    function exportCSV() {
-      window.open('/api/export', '_blank');
-    }
+        </div>
+        <div class="form-group">
+          <label>Have you used peptide products before? <span class="required">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="peptideUsage" id="use_yes" value="Regular user">
+              <label for="use_yes">Regularly</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="peptideUsage" id="use_some" value="Occasional user">
+              <label for="use_some">Occasionally</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="peptideUsage" id="use_no" value="Never used">
+              <label for="use_no">Never</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Your Occupation / Industry <span class="required">*</span></label>
+          <input type="text" id="job" placeholder="e.g. Beauty industry, health supplement sales, personal use" required>
+        </div>
+        <div class="form-group">
+          <label>Additional Notes</label>
+          <textarea id="notes" placeholder="Anything else you'd like to share or any special requirements (optional)"></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit & Connect</button>
+      </form>
+    </div>
+    <div class="success-msg" id="successMsg">
+      <div class="icon">✅</div>
+      <h2>Submitted Successfully!</h2>
+      <p>Connecting you to our customer service...</p>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const form = document.getElementById('leadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formCard = document.getElementById('formCard');
+    const successMsg = document.getElementById('successMsg');
+    const toast = document.getElementById('toast');
 
     function showToast(msg) {
-      const toast = document.getElementById('toast');
       toast.textContent = msg;
       toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 2000);
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
     }
 
-    // 每30秒自动刷新
-    setInterval(loadLeads, 30000);
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const contactType = document.querySelector('input[name="contactType"]:checked')?.value;
+      const contact = document.getElementById('contact').value.trim();
+      const peptideKnowledge = document.querySelector('input[name="peptideKnowledge"]:checked')?.value;
+      const peptideUsage = document.querySelector('input[name="peptideUsage"]:checked')?.value;
+      const job = document.getElementById('job').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+
+      if (!contact) { showToast('Please enter your contact information'); return; }
+      if (!peptideKnowledge) { showToast('Please select your familiarity with peptide products'); return; }
+      if (!peptideUsage) { showToast('Please select your peptide product usage'); return; }
+      if (!job) { showToast('Please enter your occupation / industry'); return; }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact, contactType, peptideKnowledge, peptideUsage, job, notes })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          const message = encodeURIComponent('Hello, I just submitted my customer information and would like to inquire about peptide products. My account is: ' + contact);
+          let redirectUrl = '';
+          if (contactType === 'telegram') {
+            redirectUrl = 'https://t.me/Ada_sister?text=' + message;
+          } else {
+            redirectUrl = 'https://wa.me/85261967494?text=' + message;
+          }
+          setTimeout(() => { window.location.href = redirectUrl; }, 500);
+        } else {
+          showToast(data.error || 'Submission failed, please try again');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit & Connect';
+        }
+      } catch (err) {
+        showToast('Network error, please check your connection and try again');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit & Connect';
+      }
+    });
   </script>
 </body>
 </html>
