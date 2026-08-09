@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>客户信息登记</title>
+  <title>Customer Registration</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -223,83 +223,83 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>📋 客户信息登记</h1>
-      <p>请填写以下信息，提交后我们将与您联系</p>
+      <h1>📋 Customer Registration</h1>
+      <p>Please fill in the information below and we will contact you soon</p>
     </div>
 
     <div class="form-card" id="formCard">
       <form id="leadForm">
-        <!-- 联系方式 -->
+        <!-- Contact -->
         <div class="form-group">
-          <label>联系方式 <span class="required">*</span></label>
+          <label>Contact Method <span class="required">*</span></label>
           <div class="contact-type-toggle">
             <input type="radio" name="contactType" id="whatsapp" value="whatsapp" checked>
             <label for="whatsapp">💬 WhatsApp</label>
             <input type="radio" name="contactType" id="telegram" value="telegram">
             <label for="telegram">✈️ Telegram</label>
           </div>
-          <input type="text" id="contact" placeholder="请输入您的账号（用户名/手机号/链接）" required>
+          <input type="text" id="contact" placeholder="Enter your username / phone number / link" required>
         </div>
 
-        <!-- 是否了解多肽 -->
+        <!-- Peptide Knowledge -->
         <div class="form-group">
-          <label>是否了解多肽类产品？ <span class="required">*</span></label>
+          <label>Are you familiar with peptide products? <span class="required">*</span></label>
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" name="peptideKnowledge" id="know_yes" value="了解">
-              <label for="know_yes">了解</label>
+              <input type="radio" name="peptideKnowledge" id="know_yes" value="Yes, very familiar">
+              <label for="know_yes">Yes</label>
             </div>
             <div class="radio-option">
-              <input type="radio" name="peptideKnowledge" id="know_some" value="略有了解">
-              <label for="know_some">略有了解</label>
+              <input type="radio" name="peptideKnowledge" id="know_some" value="Somewhat familiar">
+              <label for="know_some">Somewhat</label>
             </div>
             <div class="radio-option">
-              <input type="radio" name="peptideKnowledge" id="know_no" value="不了解">
-              <label for="know_no">不了解</label>
+              <input type="radio" name="peptideKnowledge" id="know_no" value="Not familiar">
+              <label for="know_no">No</label>
             </div>
           </div>
         </div>
 
-        <!-- 是否使用过多肽 -->
+        <!-- Peptide Usage -->
         <div class="form-group">
-          <label>是否使用过多肽类产品？ <span class="required">*</span></label>
+          <label>Have you used peptide products before? <span class="required">*</span></label>
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" name="peptideUsage" id="use_yes" value="经常使用">
-              <label for="use_yes">经常使用</label>
+              <input type="radio" name="peptideUsage" id="use_yes" value="Regular user">
+              <label for="use_yes">Regularly</label>
             </div>
             <div class="radio-option">
-              <input type="radio" name="peptideUsage" id="use_some" value="偶尔使用">
-              <label for="use_some">偶尔使用</label>
+              <input type="radio" name="peptideUsage" id="use_some" value="Occasional user">
+              <label for="use_some">Occasionally</label>
             </div>
             <div class="radio-option">
-              <input type="radio" name="peptideUsage" id="use_no" value="从未使用">
-              <label for="use_no">从未使用</label>
+              <input type="radio" name="peptideUsage" id="use_no" value="Never used">
+              <label for="use_no">Never</label>
             </div>
           </div>
         </div>
 
-        <!-- 职业 -->
+        <!-- Occupation -->
         <div class="form-group">
-          <label>您的职业/行业 <span class="required">*</span></label>
-          <input type="text" id="job" placeholder="例如：美容行业、保健品销售、个人使用等" required>
+          <label>Your Occupation / Industry <span class="required">*</span></label>
+          <input type="text" id="job" placeholder="e.g. Beauty industry, health supplement sales, personal use" required>
         </div>
 
-        <!-- 备注 -->
+        <!-- Notes -->
         <div class="form-group">
-          <label>其他备注</label>
-          <textarea id="notes" placeholder="有什么想说的，或者特别需求，可以写在这里（选填）"></textarea>
+          <label>Additional Notes</label>
+          <textarea id="notes" placeholder="Anything else you'd like to share or any special requirements (optional)"></textarea>
         </div>
 
-        <button type="submit" class="submit-btn" id="submitBtn">提交并联系</button>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit & Connect</button>
       </form>
     </div>
 
-    <!-- 提交成功 -->
+    <!-- Success message -->
     <div class="success-msg" id="successMsg">
       <div class="icon">✅</div>
-      <h2>提交成功！</h2>
-      <p>正在为您连接客服...</p>
+      <h2>Submitted Successfully!</h2>
+      <p>Connecting you to our customer service...</p>
     </div>
   </div>
 
@@ -329,24 +329,24 @@
       const notes = document.getElementById('notes').value.trim();
 
       if (!contact) {
-        showToast('请填写联系方式');
+        showToast('Please enter your contact information');
         return;
       }
       if (!peptideKnowledge) {
-        showToast('请选择是否了解多肽类产品');
+        showToast('Please select your familiarity with peptide products');
         return;
       }
       if (!peptideUsage) {
-        showToast('请选择是否使用过多肽类产品');
+        showToast('Please select your peptide product usage');
         return;
       }
       if (!job) {
-        showToast('请填写您的职业/行业');
+        showToast('Please enter your occupation / industry');
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = '提交中...';
+      submitBtn.textContent = 'Submitting...';
 
       try {
         const res = await fetch('/api/submit', {
@@ -357,24 +357,32 @@
         const data = await res.json();
 
         if (data.success) {
-          // 跳转到 WhatsApp 客服
-          const whatsappNumber = '85261967494';
-          const message = encodeURIComponent('您好，我刚刚提交了客户信息，想咨询多肽类产品。我的账号是：' + contact);
-          const whatsappUrl = 'https://wa.me/' + whatsappNumber + '?text=' + message;
+          // Redirect to customer service based on selected method
+          const message = encodeURIComponent('Hello, I just submitted my customer information and would like to inquire about peptide products. My account is: ' + contact);
           
-          // 延迟 500ms 后跳转
+          let redirectUrl = '';
+          if (contactType === 'telegram') {
+            // Redirect to Telegram
+            redirectUrl = 'https://t.me/Ada_sister?text=' + message;
+          } else {
+            // Redirect to WhatsApp
+            const whatsappNumber = '85261967494';
+            redirectUrl = 'https://wa.me/' + whatsappNumber + '?text=' + message;
+          }
+          
+          // Delay 500ms before redirecting
           setTimeout(() => {
-            window.location.href = whatsappUrl;
+            window.location.href = redirectUrl;
           }, 500);
         } else {
-          showToast(data.error || '提交失败，请重试');
+          showToast(data.error || 'Submission failed, please try again');
           submitBtn.disabled = false;
-          submitBtn.textContent = '提交并联系';
+          submitBtn.textContent = 'Submit & Connect';
         }
       } catch (err) {
-        showToast('网络错误，请检查网络后重试');
+        showToast('Network error, please check your connection and try again');
         submitBtn.disabled = false;
-        submitBtn.textContent = '提交并联系';
+        submitBtn.textContent = 'Submit & Connect';
       }
     });
   </script>
