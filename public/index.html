@@ -224,7 +224,7 @@
   <div class="container">
     <div class="header">
       <h1>📋 客户信息登记</h1>
-      <p>请填写以下信息，我们会尽快与您联系</p>
+      <p>请填写以下信息，提交后我们将与您联系</p>
     </div>
 
     <div class="form-card" id="formCard">
@@ -291,7 +291,7 @@
           <textarea id="notes" placeholder="有什么想说的，或者特别需求，可以写在这里（选填）"></textarea>
         </div>
 
-        <button type="submit" class="submit-btn" id="submitBtn">提交信息</button>
+        <button type="submit" class="submit-btn" id="submitBtn">提交并联系</button>
       </form>
     </div>
 
@@ -299,7 +299,7 @@
     <div class="success-msg" id="successMsg">
       <div class="icon">✅</div>
       <h2>提交成功！</h2>
-      <p>感谢您的填写，我们会尽快与您联系</p>
+      <p>正在为您连接客服...</p>
     </div>
   </div>
 
@@ -357,17 +357,24 @@
         const data = await res.json();
 
         if (data.success) {
-          formCard.style.display = 'none';
-          successMsg.style.display = 'block';
+          // 跳转到 WhatsApp 客服
+          const whatsappNumber = '85261967494';
+          const message = encodeURIComponent('您好，我刚刚提交了客户信息，想咨询多肽类产品。我的账号是：' + contact);
+          const whatsappUrl = 'https://wa.me/' + whatsappNumber + '?text=' + message;
+          
+          // 延迟 500ms 后跳转
+          setTimeout(() => {
+            window.location.href = whatsappUrl;
+          }, 500);
         } else {
           showToast(data.error || '提交失败，请重试');
           submitBtn.disabled = false;
-          submitBtn.textContent = '提交信息';
+          submitBtn.textContent = '提交并联系';
         }
       } catch (err) {
         showToast('网络错误，请检查网络后重试');
         submitBtn.disabled = false;
-        submitBtn.textContent = '提交信息';
+        submitBtn.textContent = '提交并联系';
       }
     });
   </script>
