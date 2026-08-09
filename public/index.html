@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>客户信息登记</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+      padding: 20px 16px 40px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #888;
+      margin-top: 6px;
+    }
+
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 15px;
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .form-group label .required {
+      color: #e74c3c;
+      margin-left: 2px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #333;
+      background: #fafafa;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #4a90d9;
+      background: #fff;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .radio-option {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-option label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #666;
+      background: #fafafa;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0;
+      font-weight: 400;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      border-color: #4a90d9;
+      background: #e8f0fe;
+      color: #4a90d9;
+      font-weight: 500;
+    }
+
+    .contact-type-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1.5px solid #e0e0e0;
+    }
+
+    .contact-type-toggle input[type="radio"] {
+      display: none;
+    }
+
+    .contact-type-toggle label {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      color: #666;
+      background: #fafafa;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0;
+      font-weight: 400;
+      border: none;
+    }
+
+    .contact-type-toggle input[type="radio"]:checked + label {
+      background: #4a90d9;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #4a90d9, #357abd);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+
+    .submit-btn:active {
+      opacity: 0.85;
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-msg .icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+    }
+
+    .success-msg h2 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .success-msg p {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 999;
+      display: none;
+      max-width: 90%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 客户信息登记</h1>
+      <p>请填写以下信息，我们会尽快与您联系</p>
+    </div>
+
+    <div class="form-card" id="formCard">
+      <form id="leadForm">
+        <!-- 联系方式 -->
+        <div class="form-group">
+          <label>联系方式 <span class="required">*</span></label>
+          <div class="contact-type-toggle">
+            <input type="radio" name="contactType" id="whatsapp" value="whatsapp" checked>
+            <label for="whatsapp">💬 WhatsApp</label>
+            <input type="radio" name="contactType" id="telegram" value="telegram">
+            <label for="telegram">✈️ Telegram</label>
+          </div>
+          <input type="text" id="contact" placeholder="请输入您的账号（用户名/手机号/链接）" required>
+        </div>
+
+        <!-- 是否了解多肽 -->
+        <div class="form-group">
+          <label>是否了解多肽类产品？ <span class="required">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="peptideKnowledge" id="know_yes" value="了解">
+              <label for="know_yes">了解</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="peptideKnowledge" id="know_some" value="略有了解">
+              <label for="know_some">略有了解</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="peptideKnowledge" id="know_no" value="不了解">
+              <label for="know_no">不了解</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 是否使用过多肽 -->
+        <div class="form-group">
+          <label>是否使用过多肽类产品？ <span class="required">*</span></label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="peptideUsage" id="use_yes" value="经常使用">
+              <label for="use_yes">经常使用</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="peptideUsage" id="use_some" value="偶尔使用">
+              <label for="use_some">偶尔使用</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="peptideUsage" id="use_no" value="从未使用">
+              <label for="use_no">从未使用</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 职业 -->
+        <div class="form-group">
+          <label>您的职业/行业 <span class="required">*</span></label>
+          <input type="text" id="job" placeholder="例如：美容行业、保健品销售、个人使用等" required>
+        </div>
+
+        <!-- 备注 -->
+        <div class="form-group">
+          <label>其他备注</label>
+          <textarea id="notes" placeholder="有什么想说的，或者特别需求，可以写在这里（选填）"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">提交信息</button>
+      </form>
+    </div>
+
+    <!-- 提交成功 -->
+    <div class="success-msg" id="successMsg">
+      <div class="icon">✅</div>
+      <h2>提交成功！</h2>
+      <p>感谢您的填写，我们会尽快与您联系</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const form = document.getElementById('leadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formCard = document.getElementById('formCard');
+    const successMsg = document.getElementById('successMsg');
+    const toast = document.getElementById('toast');
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const contactType = document.querySelector('input[name="contactType"]:checked')?.value;
+      const contact = document.getElementById('contact').value.trim();
+      const peptideKnowledge = document.querySelector('input[name="peptideKnowledge"]:checked')?.value;
+      const peptideUsage = document.querySelector('input[name="peptideUsage"]:checked')?.value;
+      const job = document.getElementById('job').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+
+      if (!contact) {
+        showToast('请填写联系方式');
+        return;
+      }
+      if (!peptideKnowledge) {
+        showToast('请选择是否了解多肽类产品');
+        return;
+      }
+      if (!peptideUsage) {
+        showToast('请选择是否使用过多肽类产品');
+        return;
+      }
+      if (!job) {
+        showToast('请填写您的职业/行业');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '提交中...';
+
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact, contactType, peptideKnowledge, peptideUsage, job, notes })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          formCard.style.display = 'none';
+          successMsg.style.display = 'block';
+        } else {
+          showToast(data.error || '提交失败，请重试');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '提交信息';
+        }
+      } catch (err) {
+        showToast('网络错误，请检查网络后重试');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '提交信息';
+      }
+    });
+  </script>
+</body>
+</html>
