@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 let leads = [];
-const ADMIN_PASSWORD = '***';
+const ADMIN_PASSWORD = 'Facai2026.';
 
 app.use(cors());
 app.use(bodyParser.json());
